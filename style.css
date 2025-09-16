@@ -56,6 +56,18 @@ h1 {
     margin-top: 20px;
 }
 
+#api-response {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    white-space: pre-wrap; /* Allows long lines to wrap */
+    word-wrap: break-word; /* Breaks long words or strings */
+    font-family: monospace;
+    font-size: 0.8em;
+    margin-top: 20px;
+}
+
 #weather-icon {
     width: 100px;
     height: 100px;
