@@ -10,10 +10,16 @@ const errorMessage = document.getElementById('error-message');
 // Get a reference to our new response container
 const apiResponseContainer = document.getElementById('api-response');
 
+// The placeholder will be replaced by our deployment script
 const apiKey = 'fd4d6404c8569d3e00c42c19750e8a91';
 
 // Add event listener to the button
 getWeatherBtn.addEventListener('click', () => {
+    // Clear previous results
+    apiResponseContainer.textContent = 'Fetching location...';
+    weatherInfo.classList.add('hidden');
+    errorMessage.classList.add('hidden');
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
     } else {
@@ -25,6 +31,7 @@ getWeatherBtn.addEventListener('click', () => {
 function onSuccess(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
+    apiResponseContainer.textContent = `Location found:\nLat: ${latitude}\nLon: ${longitude}\n\nFetching weather...`;
     getWeatherByCoords(latitude, longitude);
 }
 
@@ -46,11 +53,13 @@ async function getWeatherByCoords(lat, lon) {
         apiResponseContainer.textContent = JSON.stringify(data, null, 2);
 
         if (!response.ok) {
+            // Use the error message from the API if available
             throw new Error(data.message || 'Weather data not found.');
         }
         
         displayWeather(data); // Also update the normal display if successful
     } catch (error) {
+        // This will catch network errors or issues with fetch itself
         showError(error.message);
     }
 }
