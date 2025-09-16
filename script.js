@@ -8,7 +8,7 @@ const weatherIcon = document.getElementById('weather-icon');
 const errorMessage = document.getElementById('error-message');
 const apiResponseContainer = document.getElementById('api-response');
 
-// Make sure to use your new student API key here for the test.
+// Make sure to use your new student API key here.
 const apiKey = 'YOUR_API_KEY';
 
 // Add event listener to the button
