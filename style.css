@@ -1,39 +1,54 @@
+/* Universal box-sizing for predictable layouts */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     background-color: #f0f8ff;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    /* Set a base font size for better readability on mobile */
+    font-size: 16px;
 }
 
 .weather-container {
     background-color: white;
-    padding: 20px 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 300px;
+    
+    /* Make the container responsive */
+    width: 90%; /* Use 90% of the screen width */
+    max-width: 380px; /* But don't let it get wider than 380px */
 }
 
 h1 {
     color: #333;
+    font-size: 1.5em; /* Use relative units */
 }
 
 #getWeatherBtn {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     border: none;
     background-color: #007BFF;
     color: white;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1em;
     margin-bottom: 20px;
+    
+    /* Smooth transition for visual feedback */
+    transition: background-color 0.2s ease;
 }
 
-#getWeatherBtn:hover {
+/* Style for when the button is actively being pressed on a touch screen */
+#getWeatherBtn:active {
     background-color: #0056b3;
 }
 
