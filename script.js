@@ -10,7 +10,7 @@ const apiResponseContainer = document.getElementById('api-response');
 
 // --- START OF CHANGE ---
 // Paste your actual, active API key here for this test.
-const apiKey = 'fd4d6404c8569d3e00c42c19750e8a91'; 
+const apiKey = 'YOUR_ACTUAL_API_KEY'; 
 // --- END OF CHANGE ---
 
 // Add event listener to the button
