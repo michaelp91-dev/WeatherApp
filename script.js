@@ -6,12 +6,12 @@ const temperature = document.getElementById('temperature');
 const description = document.getElementById('description');
 const weatherIcon = document.getElementById('weather-icon');
 const errorMessage = document.getElementById('error-message');
-
-// Get a reference to our new response container
 const apiResponseContainer = document.getElementById('api-response');
 
-// The placeholder will be replaced by our deployment script
-const apiKey = 'API_KEY_PLACEHOLDER';
+// --- START OF CHANGE ---
+// Paste your actual, active API key here for this test.
+const apiKey = 'fd4d6404c8569d3e00c42c19750e8a91'; 
+// --- END OF CHANGE ---
 
 // Add event listener to the button
 getWeatherBtn.addEventListener('click', () => {
@@ -46,20 +46,16 @@ async function getWeatherByCoords(lat, lon) {
 
     try {
         const response = await fetch(apiUrl);
-        const data = await response.json(); // Get the JSON data regardless of response status
+        const data = await response.json(); 
 
-        // Print the raw data object to our new container
-        // JSON.stringify(data, null, 2) formats it to be readable
         apiResponseContainer.textContent = JSON.stringify(data, null, 2);
 
         if (!response.ok) {
-            // Use the error message from the API if available
             throw new Error(data.message || 'Weather data not found.');
         }
         
-        displayWeather(data); // Also update the normal display if successful
+        displayWeather(data);
     } catch (error) {
-        // This will catch network errors or issues with fetch itself
         showError(error.message);
     }
 }
@@ -84,6 +80,5 @@ function showError(message) {
     errorMessage.classList.remove('hidden');
     errorMessage.textContent = `Error: ${message}`;
     
-    // Also print the error to our response container for debugging
     apiResponseContainer.textContent = `Error: ${message}`;
 }
