@@ -9,7 +9,7 @@ const errorMessage = document.getElementById('error-message');
 const apiResponseContainer = document.getElementById('api-response');
 
 // Make sure to use your new student API key here.
-const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
+const apiKey = 'YOUR_API_KEY';
 
 // Add event listener to the button
 getWeatherBtn.addEventListener('click', () => {
@@ -43,7 +43,7 @@ function onError(error) {
 
 // Function to fetch weather data from the API using coordinates
 async function getWeatherByCoords(lat, lon) {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}`;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
     // Create a censored version of the URL to display
     const censoredApiUrl = apiUrl.replace(apiKey, 'API_KEY_HIDDEN');
