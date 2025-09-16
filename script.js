@@ -43,7 +43,7 @@ function onError(error) {
 
 // Function to fetch weather data from the API using coordinates
 async function getWeatherByCoords(lat, lon) {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={apiKey}`;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}`;
 
     // Create a censored version of the URL to display
     const censoredApiUrl = apiUrl.replace(apiKey, 'API_KEY_HIDDEN');
