@@ -9,7 +9,7 @@ const errorMessage = document.getElementById('error-message');
 const apiResponseContainer = document.getElementById('api-response');
 
 // Make sure to use your new student API key here.
-const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
+const apiKey = 'API_KEY_PLACEHOLDER';
 
 // Add event listener to the button
 getWeatherBtn.addEventListener('click', () => {
