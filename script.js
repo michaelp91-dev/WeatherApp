@@ -8,7 +8,7 @@ const weatherIcon = document.getElementById('weather-icon');
 const errorMessage = document.getElementById('error-message');
 
 // Revert to the placeholder for secure deployment
-const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
+const apiKey = '';
 
 // Add event listener to the button
 getWeatherBtn.addEventListener('click', () => {
@@ -36,8 +36,8 @@ function onError(error) {
 
 // Function to fetch weather data from the API using coordinates
 async function getWeatherByCoords(lat, lon) {
-    // --- THIS IS THE CORRECTED LINE ---
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    // Added &units=metric to get temperature in Celsius
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
     try {
         const response = await fetch(apiUrl);
