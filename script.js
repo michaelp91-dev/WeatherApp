@@ -1,57 +1,56 @@
-// Get references to the HTML elements
-const cityInput = document.getElementById('cityInput');
-const searchBtn = document.getElementById('searchBtn');
-const weatherInfo = document.getElementById('weather-info');
-const cityName = document.getElementById('cityName');
-const temperature = document.getElementById('temperature');
-const description = document.getElementById('description');
-const weatherIcon = document.getElementById('weather-icon');
-const errorMessage = document.getElementById('error-message');
-
-// The placeholder will be replaced by our deployment script
-const apiKey = 'API_KEY_PLACEHOLDER';
-
-// Add an event listener to the search button
-searchBtn.addEventListener('click', () => {
-    const city = cityInput.value.trim();
-    if (city) {
-        getWeather(city);
-    }
-});
-
-// Function to fetch weather data from the API
-async function getWeather(city) {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error('City not found');
-        }
-        const data = await response.json();
-        displayWeather(data);
-    } catch (error) {
-        showError(error.message);
-    }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-// Function to display the fetched weather data
-function displayWeather(data) {
-    errorMessage.classList.add('hidden');
-    weatherInfo.classList.remove('hidden');
-
-    cityName.textContent = data.name;
-    temperature.textContent = `Temperature: ${Math.round(data.main.temp)}°C`;
-    description.textContent = `Weather: ${data.weather[0].main}`;
-    
-    const iconCode = data.weather[0].icon;
-    weatherIcon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    weatherIcon.alt = data.weather[0].description;
+.weather-container {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
 }
 
-// Function to show an error message
-function showError(message) {
-    weatherInfo.classList.add('hidden');
-    errorMessage.classList.remove('hidden');
-    errorMessage.textContent = `Error: ${message}. Please try again.`;
+h1 {
+    color: #333;
+}
+
+#getWeatherBtn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+#getWeatherBtn:hover {
+    background-color: #0056b3;
+}
+
+#weather-info {
+    margin-top: 20px;
+}
+
+#weather-icon {
+    width: 100px;
+    height: 100px;
+}
+
+.hidden {
+    display: none;
+}
+
+#error-message {
+    color: red;
+    margin-top: 10px;
 }
