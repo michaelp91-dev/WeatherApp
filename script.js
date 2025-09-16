@@ -36,7 +36,8 @@ function onError(error) {
 
 // Function to fetch weather data from the API using coordinates
 async function getWeatherByCoords(lat, lon) {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}`;
+    // --- THIS IS THE CORRECTED LINE ---
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
     try {
         const response = await fetch(apiUrl);
