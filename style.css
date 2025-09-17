@@ -25,32 +25,20 @@ h1 {
     color: #333;
 }
 
-.search-container {
-    display: flex;
+#getWeatherBtn {
+    width: 100%;
+    padding: 15px;
     margin-bottom: 20px;
-}
-
-input[type="text"] {
-    flex-grow: 1;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px 0 0 8px;
-    font-size: 1em;
-    outline: none;
-}
-
-button {
+    font-size: 1.1em;
     background-color: #007BFF;
     color: #fff;
     border: none;
-    padding: 0 20px;
-    border-radius: 0 8px 8px 0;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1em;
     transition: background-color 0.2s ease;
 }
 
-button:active {
+#getWeatherBtn:active {
     background-color: #0056b3;
 }
 
