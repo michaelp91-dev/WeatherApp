@@ -1,3 +1,4 @@
+// Use the placeholder for secure deployment
 const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
 const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
@@ -14,17 +15,35 @@ searchButton.addEventListener('click', () => {
     }
 });
 
-function fetchWeather(location) {
+// Added an event listener for the "Enter" key
+locationInput.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+        const location = locationInput.value;
+        if (location) {
+            fetchWeather(location);
+        }
+    }
+});
+
+async function fetchWeather(location) {
     const url = `${apiUrl}?q=${location}&appid=${apiKey}&units=metric`;
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            locationElement.textContent = data.name;
-            temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
-            descriptionElement.textContent = data.weather[0].description;
-        })
-        .catch(error => {
-            console.error('Error fetching weather data:', error);
-        });
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || 'City not found.');
+        }
+        const data = await response.json();
+        
+        locationElement.textContent = data.name;
+        temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
+        descriptionElement.textContent = data.weather[0].description;
+
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        locationElement.textContent = error.message;
+        temperatureElement.textContent = '';
+        descriptionElement.textContent = '';
+    }
 }
