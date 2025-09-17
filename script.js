@@ -6,6 +6,7 @@ const searchButton = document.getElementById('searchButton');
 const locationElement = document.getElementById('location');
 const temperatureElement = document.getElementById('temperature');
 const descriptionElement = document.getElementById('description');
+const fullApiElement = document.getElementById('full_api');
 
 searchButton.addEventListener('click', () => {
     const location = locationInput.value;
@@ -23,6 +24,7 @@ function fetchWeather(location) {
             locationElement.textContent = data.name;
             temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
             descriptionElement.textContent = data.weather[0].description;
+            fullApiElement.textContent = data;
         })
         .catch(error => {
             console.error('Error fetching weather data:', error);
