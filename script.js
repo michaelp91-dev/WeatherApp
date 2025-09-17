@@ -8,7 +8,7 @@ const temperatureElement = document.getElementById('temperature');
 const descriptionElement = document.getElementById('description');
 const weatherIcon = document.getElementById('weather-icon');
 
-// New elements for details display
+// References to the details display elements
 const detailsContainer = document.getElementById('details-container');
 const apiResponseContainer = document.getElementById('api-response');
 
