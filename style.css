@@ -1,61 +1,89 @@
-const apiKey = 'API_KEY_PLACEHOLDER';
-const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #f0f8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-size: 16px;
+}
 
-const locationInput = document.getElementById('locationInput');
-const searchButton = document.getElementById('searchButton');
-const locationElement = document.getElementById('location');
-const temperatureElement = document.getElementById('temperature');
-const descriptionElement = document.getElementById('description');
-const weatherIcon = document.getElementById('weather-icon');
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
 
-// References to the details display elements
-const detailsContainer = document.getElementById('details-container');
-const apiResponseContainer = document.getElementById('api-response');
+h1 {
+    font-size: 1.8em;
+    color: #333;
+}
 
-searchButton.addEventListener('click', () => {
-    const location = locationInput.value;
-    if (location) {
-        fetchWeather(location);
-    }
-});
+.search-container {
+    display: flex;
+    margin-bottom: 20px;
+}
 
-locationInput.addEventListener('keyup', (event) => {
-    if (event.key === 'Enter') {
-        const location = locationInput.value;
-        if (location) {
-            fetchWeather(location);
-        }
-    }
-});
+input[type="text"] {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px 0 0 8px;
+    font-size: 1em;
+    outline: none;
+}
 
-async function fetchWeather(location) {
-    const url = `${apiUrl}?q=${location}&appid=${apiKey}&units=metric`;
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 0 20px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || 'City not found.');
-        }
-        const data = await response.json();
+button:active {
+    background-color: #0056b3;
+}
 
-        // Display basic weather info
-        locationElement.textContent = data.name;
-        temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
-        descriptionElement.textContent = data.weather[0].description;
-        weatherIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-        weatherIcon.alt = data.weather[0].description;
+.weather-info {
+    margin-top: 20px;
+}
 
-        // Display the full JSON response in the details section
-        apiResponseContainer.textContent = JSON.stringify(data, null, 2);
-        detailsContainer.classList.remove('hidden'); // Show the details container
+#weather-icon {
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+}
 
-    } catch (error) {
-        console.error('Error fetching weather data:', error);
-        locationElement.textContent = error.message;
-        temperatureElement.textContent = '';
-        descriptionElement.textContent = '';
-        weatherIcon.src = '';
-        detailsContainer.classList.add('hidden'); // Hide details on error
-    }
+/* Styles for the details section */
+#details-container {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+#api-response {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+    font-size: 0.85em;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.hidden {
+    display: none;
 }
