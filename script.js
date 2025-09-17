@@ -1,5 +1,5 @@
 // Use the placeholder for secure deployment
-const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
+const apiKey = '';
 const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
 const locationInput = document.getElementById('locationInput');
