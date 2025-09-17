@@ -13,7 +13,7 @@ body {
     background-color: white;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px S12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 90%;
     max-width: 400px;
@@ -30,10 +30,10 @@ h1 {
 }
 
 input[type="text"] {
-    flex-grow: 1; /* Allows input to fill available space */
+    flex-grow: 1;
     padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 8px 0 0 8px; /* Rounded corners on the left */
+    border-radius: 8px 0 0 8px;
     font-size: 1em;
     outline: none;
 }
@@ -43,7 +43,7 @@ button {
     color: #fff;
     border: none;
     padding: 0 20px;
-    border-radius: 0 8px 8px 0; /* Rounded corners on the right */
+    border-radius: 0 8px 8px 0;
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.2s ease;
@@ -63,7 +63,7 @@ button:active {
     margin-top: 10px;
 }
 
-/* New styles for the details section */
+/* Styles for the details section */
 #details-container {
     margin-top: 25px;
     padding-top: 15px;
@@ -80,7 +80,7 @@ button:active {
     word-wrap: break-word;
     font-family: monospace;
     font-size: 0.85em;
-    max-height: 250px; /* Limit height and allow scrolling */
+    max-height: 250px;
     overflow-y: auto;
 }
 
