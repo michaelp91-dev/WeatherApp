@@ -2,8 +2,7 @@ const apiKey = 'API_KEY_PLACEHOLDER';
 const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
 // Get references to all HTML elements
-const locationInput = document.getElementById('locationInput');
-const searchButton = document.getElementById('searchButton');
+const getWeatherBtn = document.getElementById('getWeatherBtn');
 const weatherDisplay = document.getElementById('weather-display');
 const errorMessage = document.getElementById('error-message');
 
@@ -20,27 +19,35 @@ const visibility = document.getElementById('visibility');
 const sunrise = document.getElementById('sunrise');
 const sunset = document.getElementById('sunset');
 
-searchButton.addEventListener('click', () => {
-    const location = locationInput.value;
-    if (location) fetchWeather(location);
-});
-
-locationInput.addEventListener('keyup', (event) => {
-    if (event.key === 'Enter') {
-        const location = locationInput.value;
-        if (location) fetchWeather(location);
+getWeatherBtn.addEventListener('click', () => {
+    if (navigator.geolocation) {
+        // This prompts the user for permission
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    } else {
+        showError("Geolocation is not supported by your browser.");
     }
 });
 
-async function fetchWeather(location) {
-    // Add "&units=imperial" to get Fahrenheit and MPH
-    const url = `${apiUrl}?q=${location}&appid=${apiKey}&units=imperial`;
+// This function runs if the user allows location access
+function onSuccess(position) {
+    const { latitude, longitude } = position.coords;
+    fetchWeatherByCoords(latitude, longitude);
+}
+
+// This function runs if the user blocks location access or an error occurs
+function onError(error) {
+    showError(`Could not get location: ${error.message}`);
+}
+
+async function fetchWeatherByCoords(lat, lon) {
+    // Build the URL with coordinates instead of a city name
+    const url = `${apiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
 
     try {
         const response = await fetch(url);
         if (!response.ok) {
             const data = await response.json();
-            throw new Error(data.message || 'City not found.');
+            throw new Error(data.message || 'Weather data not found.');
         }
         const data = await response.json();
         displayWeather(data);
@@ -50,10 +57,8 @@ async function fetchWeather(location) {
 }
 
 function displayWeather(data) {
-    // Clear any previous error messages
     errorMessage.textContent = '';
     
-    // Populate all the elements with data
     locationElement.textContent = data.name;
     temperatureElement.textContent = `${Math.round(data.main.temp)}°F`;
     descriptionElement.textContent = data.weather[0].description;
@@ -64,13 +69,11 @@ function displayWeather(data) {
     humidity.textContent = `${data.main.humidity}%`;
     wind.textContent = `${Math.round(data.wind.speed)} mph`;
     pressure.textContent = `${data.main.pressure} hPa`;
-    visibility.textContent = `${(data.visibility / 1609).toFixed(1)} mi`; // Convert meters to miles
+    visibility.textContent = `${(data.visibility / 1609).toFixed(1)} mi`;
     
-    // Convert sunrise/sunset timestamps to local time
     sunrise.textContent = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     sunset.textContent = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    // Show the weather display
     weatherDisplay.classList.remove('hidden');
 }
 
