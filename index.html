@@ -3,21 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
+    <title>Weather Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Weather App</h1>
-        <input type="text" id="locationInput" placeholder="Enter a city">
-        <button id="searchButton">Search</button>
-        <div class="weather-info">
-            <h2 id="location"></h2>
-            <p id="temperature"></p>
-            <p id="description"></p>
-            <p>Full API Content</p>
-            <p id="full_api"></p>
+        <h1>Weather Dashboard</h1>
+        <div class="search-container">
+            <input type="text" id="locationInput" placeholder="Enter a city">
+            <button id="searchButton">Search</button>
         </div>
+
+        <div id="weather-display" class="hidden">
+            <div class="main-info">
+                <img id="weather-icon" src="" alt="Weather icon">
+                <div>
+                    <h2 id="location"></h2>
+                    <p id="temperature"></p>
+                    <p id="description"></p>
+                </div>
+            </div>
+
+            <h3>Current Details</h3>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="label">Feels Like</span>
+                    <span id="feels-like" class="value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">High / Low</span>
+                    <span id="high-low" class="value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Humidity</span>
+                    <span id="humidity" class="value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Wind</span>
+                    <span id="wind" class="value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Pressure</span>
+                    <span id="pressure" class="value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Visibility</span>
+                    <span id="visibility" class="value"></span>
+                </div>
+                 <div class="detail-item">
+                    <span class="label">Sunrise</span>
+                    <span id="sunrise" class="value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Sunset</span>
+                    <span id="sunset" class="value"></span>
+                </div>
+            </div>
+        </div>
+        <p id="error-message"></p>
     </div>
     <script src="script.js"></script>
 </body>
