@@ -1,83 +1,40 @@
-/* Universal box-sizing for predictable layouts */
-* {
-    box-sizing: border-box;
-}
-
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    background-color: #f0f8ff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    /* Set a base font size for better readability on mobile */
-    font-size: 16px;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
 }
 
-.weather-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.container {
+    max-width: 400px;
+    margin: 0 auto;
     text-align: center;
-    
-    /* Make the container responsive */
-    width: 90%; /* Use 90% of the screen width */
-    max-width: 380px; /* But don't let it get wider than 380px */
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.5); /* Set the background color to be transparent */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Adjust the alpha value here for the box shadow transparency */
+    margin-top: 105px;
 }
 
 h1 {
-    color: #333;
-    font-size: 1.5em; /* Use relative units */
+    font-size: 24px;
 }
 
-#getWeatherBtn {
+input[type="text"] {
     width: 100%;
-    padding: 15px;
-    border: none;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1em;
-    margin-bottom: 20px;
-    
-    /* Smooth transition for visual feedback */
-    transition: background-color 0.2s ease;
-}
-
-/* Style for when the button is actively being pressed on a touch screen */
-#getWeatherBtn:active {
-    background-color: #0056b3;
-}
-
-#weather-info {
-    margin-top: 20px;
-}
-
-#api-response {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
     padding: 10px;
-    text-align: left;
-    white-space: pre-wrap; /* Allows long lines to wrap */
-    word-wrap: break-word; /* Breaks long words or strings */
-    font-family: monospace;
-    font-size: 0.8em;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.weather-info {
     margin-top: 20px;
-}
-
-#weather-icon {
-    width: 100px;
-    height: 100px;
-}
-
-.hidden {
-    display: none;
-}
-
-#error-message {
-    color: red;
-    margin-top: 10px;
 }
