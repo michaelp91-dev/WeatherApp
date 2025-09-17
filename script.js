@@ -1,74 +1,30 @@
-// Get references to the HTML elements
-const getWeatherBtn = document.getElementById('getWeatherBtn');
-const weatherInfo = document.getElementById('weather-info');
-const cityName = document.getElementById('cityName');
-const temperature = document.getElementById('temperature');
-const description = document.getElementById('description');
-const weatherIcon = document.getElementById('weather-icon');
-const errorMessage = document.getElementById('error-message');
+const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
+const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
-// Revert to the placeholder for secure deployment
-const apiKey = '';
+const locationInput = document.getElementById('locationInput');
+const searchButton = document.getElementById('searchButton');
+const locationElement = document.getElementById('location');
+const temperatureElement = document.getElementById('temperature');
+const descriptionElement = document.getElementById('description');
 
-// Add event listener to the button
-getWeatherBtn.addEventListener('click', () => {
-    weatherInfo.classList.add('hidden');
-    errorMessage.classList.add('hidden');
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    } else {
-        showError("Geolocation is not supported by this browser.");
+searchButton.addEventListener('click', () => {
+    const location = locationInput.value;
+    if (location) {
+        fetchWeather(location);
     }
 });
 
-// Callback function for successful geolocation
-function onSuccess(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    getWeatherByCoords(latitude, longitude);
-}
+function fetchWeather(location) {
+    const url = `${apiUrl}?q=${location}&appid=${apiKey}&units=metric`;
 
-// Callback function for geolocation errors
-function onError(error) {
-    showError(`Could not get location: ${error.message}`);
-}
-
-// Function to fetch weather data from the API using coordinates
-async function getWeatherByCoords(lat, lon) {
-    // Added &units=metric to get temperature in Celsius
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
-
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || 'Weather data not found.');
-        }
-        const data = await response.json();
-        displayWeather(data);
-    } catch (error) {
-        showError(error.message);
-    }
-}
-
-// Function to display the fetched weather data
-function displayWeather(data) {
-    errorMessage.classList.add('hidden');
-    weatherInfo.classList.remove('hidden');
-
-    cityName.textContent = data.name;
-    temperature.textContent = `Temperature: ${Math.round(data.main.temp)}°C`;
-    description.textContent = `Weather: ${data.weather[0].main}`;
-    
-    const iconCode = data.weather[0].icon;
-    weatherIcon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    weatherIcon.alt = data.weather[0].description;
-}
-
-// Function to show an error message
-function showError(message) {
-    weatherInfo.classList.add('hidden');
-    errorMessage.classList.remove('hidden');
-    errorMessage.textContent = `Error: ${message}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            locationElement.textContent = data.name;
+            temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
+            descriptionElement.textContent = data.weather[0].description;
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+        });
 }
