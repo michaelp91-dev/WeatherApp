@@ -50,6 +50,14 @@ async function fetchWeatherByCoords(lat, lon) {
             throw new Error(data.message || 'Weather data not found.');
         }
         const data = await response.json();
+
+        // --- NEW CODE ADDED HERE ---
+        const rawDataDisplay = document.getElementById('rawDataDisplay');
+        if (rawDataDisplay) {
+            rawDataDisplay.textContent = JSON.stringify(data, null, 2);
+        }
+        // --- END OF NEW CODE ---
+        
         displayWeather(data);
     } catch (error) {
         showError(error.message);
