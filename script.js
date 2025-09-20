@@ -21,9 +21,12 @@ const visibility = document.getElementById('visibility');
 const sunrise = document.getElementById('sunrise');
 const sunset = document.getElementById('sunset');
 
-// New references for hourly and daily forecast
+// References for hourly and daily forecast
 const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
 const dailyForecastContainer = document.getElementById('daily-forecast-container');
+
+// NEW: Global variable for the map
+let map = null;
 
 getWeatherBtn.addEventListener('click', () => {
     if (navigator.geolocation) {
@@ -78,9 +81,53 @@ async function fetchWeatherAndForecasts(lat, lon) {
         displayHourlyWeather(hourlyData);
         displayDailyWeather(dailyData);
 
+        // NEW: Initialize and display the map
+        initializeMap(lat, lon);
+
     } catch (error) {
         showError(error.message);
     }
+}
+
+// NEW: Function to initialize and display the map
+function initializeMap(lat, lon) {
+    // If a map already exists, remove it
+    if (map) {
+        map.remove();
+    }
+    
+    // Create the new map centered on the user's location
+    map = L.map('map').setView([lat, lon], 10);
+
+    // Add a base map tile layer (OpenStreetMap)
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Add OpenWeatherMap overlays
+    const cloudsLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CLOUDS_NEW/{z}/{x}/{y}?appid=${apiKey}`, {
+        opacity: 0.5,
+        attribution: '© OpenWeatherMap'
+    });
+
+    const temperatureLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/temp_new/{z}/{x}/{y}?appid=${apiKey}`, {
+        opacity: 0.5,
+        attribution: '© OpenWeatherMap'
+    });
+    
+    // Add layers to the map and create a layer control
+    const baseLayers = {
+        "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
+    };
+    
+    const overlayLayers = {
+        "Temperature": temperatureLayer,
+        "Clouds": cloudsLayer
+    };
+    
+    L.control.layers(baseLayers, overlayLayers).addTo(map);
+    temperatureLayer.addTo(map);
 }
 
 function displayWeather(data) {
@@ -156,4 +203,3 @@ function showError(message) {
     dailyForecastContainer.innerHTML = '';
     errorMessage.textContent = `Error: ${message}`;
 }
-    
