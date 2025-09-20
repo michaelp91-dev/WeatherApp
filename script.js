@@ -102,8 +102,8 @@ function displayWeather(data) {
 function displayHourlyWeather(data) {
     hourlyForecastContainer.innerHTML = ''; // Clear previous content
 
-    // We'll display the next 8 hours for simplicity
-    const hourlyForecasts = data.list.slice(0, 8);
+    // We'll display the next 24 hours for simplicity
+    const hourlyForecasts = data.list.slice(0, 24);
 
     hourlyForecasts.forEach(hour => {
         const date = new Date(hour.dt * 1000);
