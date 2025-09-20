@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzwQvLYBwLdVS/GkN+fWwL8dFw="
+     crossorigin=""/>
 </head>
 <body>
     <div class="container">
@@ -70,8 +74,17 @@
             </div>
         </div>
 
+        <div class="map-container">
+            <h2>Weather Map</h2>
+            <div id="map"></div>
+        </div>
+
         <p id="error-message"></p>
     </div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20q5jYkL/H2W6E+HjB1z4k52vP0Hl/hY+F5B5lT3Zz4="
+     crossorigin=""></script>
     <script src="script.js"></script>
 </body>
 </html>
