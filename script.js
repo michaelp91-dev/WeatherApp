@@ -1,5 +1,6 @@
 const apiKey = 'API_KEY_PLACEHOLDER';
-const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+const currentApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+const hourlyApiUrl = 'https://pro.openweathermap.org/data/2.5/forecast/hourly';
 
 // Get references to all HTML elements
 const getWeatherBtn = document.getElementById('getWeatherBtn');
@@ -19,46 +20,59 @@ const visibility = document.getElementById('visibility');
 const sunrise = document.getElementById('sunrise');
 const sunset = document.getElementById('sunset');
 
+// New references for hourly forecast and raw data
+const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
+const rawDataDisplay = document.getElementById('rawDataDisplay');
+const hourlyRawDataDisplay = document.getElementById('hourlyRawDataDisplay');
+
 getWeatherBtn.addEventListener('click', () => {
     if (navigator.geolocation) {
-        // This prompts the user for permission
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
     } else {
         showError("Geolocation is not supported by your browser.");
     }
 });
 
-// This function runs if the user allows location access
 function onSuccess(position) {
     const { latitude, longitude } = position.coords;
-    fetchWeatherByCoords(latitude, longitude);
+    fetchWeatherAndForecast(latitude, longitude);
 }
 
-// This function runs if the user blocks location access or an error occurs
 function onError(error) {
     showError(`Could not get location: ${error.message}`);
 }
 
-async function fetchWeatherByCoords(lat, lon) {
-    // Build the URL with coordinates instead of a city name
-    const url = `${apiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+async function fetchWeatherAndForecast(lat, lon) {
+    const currentUrl = `${currentApiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    const hourlyUrl = `${hourlyApiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || 'Weather data not found.');
-        }
-        const data = await response.json();
+        const [currentResponse, hourlyResponse] = await Promise.all([
+            fetch(currentUrl),
+            fetch(hourlyUrl)
+        ]);
 
-        // --- NEW CODE ADDED HERE ---
-        const rawDataDisplay = document.getElementById('rawDataDisplay');
-        if (rawDataDisplay) {
-            rawDataDisplay.textContent = JSON.stringify(data, null, 2);
+        if (!currentResponse.ok) {
+            const data = await currentResponse.json();
+            throw new Error(data.message || 'Current weather data not found.');
         }
-        // --- END OF NEW CODE ---
-        
-        displayWeather(data);
+
+        if (!hourlyResponse.ok) {
+            const data = await hourlyResponse.json();
+            throw new Error(data.message || 'Hourly forecast data not found.');
+        }
+
+        const currentData = await currentResponse.json();
+        const hourlyData = await hourlyResponse.json();
+
+        // Display raw data for both API calls
+        rawDataDisplay.textContent = JSON.stringify(currentData, null, 2);
+        hourlyRawDataDisplay.textContent = JSON.stringify(hourlyData, null, 2);
+
+        // Call functions to display the processed weather data
+        displayWeather(currentData);
+        displayHourlyWeather(hourlyData);
+
     } catch (error) {
         showError(error.message);
     }
@@ -85,7 +99,35 @@ function displayWeather(data) {
     weatherDisplay.classList.remove('hidden');
 }
 
+function displayHourlyWeather(data) {
+    hourlyForecastContainer.innerHTML = ''; // Clear previous content
+
+    // We'll display the next 8 hours for simplicity
+    const hourlyForecasts = data.list.slice(0, 8);
+
+    hourlyForecasts.forEach(hour => {
+        const date = new Date(hour.dt * 1000);
+        const time = date.toLocaleTimeString([], { hour: 'numeric' });
+        const temp = Math.round(hour.main.temp);
+        const iconSrc = `https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`;
+        const description = hour.weather[0].description;
+
+        const hourlyItem = document.createElement('div');
+        hourlyItem.classList.add('hourly-item');
+        hourlyItem.innerHTML = `
+            <p>${time}</p>
+            <img src="${iconSrc}" alt="${description}">
+            <p>${temp}°F</p>
+        `;
+
+        hourlyForecastContainer.appendChild(hourlyItem);
+    });
+}
+
 function showError(message) {
     weatherDisplay.classList.add('hidden');
+    hourlyForecastContainer.innerHTML = ''; // Clear hourly forecast on error
+    rawDataDisplay.textContent = ''; // Clear raw data on error
+    hourlyRawDataDisplay.textContent = ''; // Clear hourly raw data on error
     errorMessage.textContent = `Error: ${message}`;
 }
