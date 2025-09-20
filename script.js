@@ -1,6 +1,7 @@
 const apiKey = 'API_KEY_PLACEHOLDER';
 const currentApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 const hourlyApiUrl = 'https://pro.openweathermap.org/data/2.5/forecast/hourly';
+const dailyApiUrl = 'https://api.openweathermap.org/data/2.5/forecast/daily';
 
 // Get references to all HTML elements
 const getWeatherBtn = document.getElementById('getWeatherBtn');
@@ -20,10 +21,9 @@ const visibility = document.getElementById('visibility');
 const sunrise = document.getElementById('sunrise');
 const sunset = document.getElementById('sunset');
 
-// New references for hourly forecast and raw data
+// New references for hourly and daily forecast
 const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
-const rawDataDisplay = document.getElementById('rawDataDisplay');
-const hourlyRawDataDisplay = document.getElementById('hourlyRawDataDisplay');
+const dailyForecastContainer = document.getElementById('daily-forecast-container');
 
 getWeatherBtn.addEventListener('click', () => {
     if (navigator.geolocation) {
@@ -35,21 +35,23 @@ getWeatherBtn.addEventListener('click', () => {
 
 function onSuccess(position) {
     const { latitude, longitude } = position.coords;
-    fetchWeatherAndForecast(latitude, longitude);
+    fetchWeatherAndForecasts(latitude, longitude);
 }
 
 function onError(error) {
     showError(`Could not get location: ${error.message}`);
 }
 
-async function fetchWeatherAndForecast(lat, lon) {
+async function fetchWeatherAndForecasts(lat, lon) {
     const currentUrl = `${currentApiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
     const hourlyUrl = `${hourlyApiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    const dailyUrl = `${dailyApiUrl}?lat=${lat}&lon=${lon}&cnt=7&appid=${apiKey}&units=imperial`;
 
     try {
-        const [currentResponse, hourlyResponse] = await Promise.all([
+        const [currentResponse, hourlyResponse, dailyResponse] = await Promise.all([
             fetch(currentUrl),
-            fetch(hourlyUrl)
+            fetch(hourlyUrl),
+            fetch(dailyUrl)
         ]);
 
         if (!currentResponse.ok) {
@@ -62,16 +64,19 @@ async function fetchWeatherAndForecast(lat, lon) {
             throw new Error(data.message || 'Hourly forecast data not found.');
         }
 
+        if (!dailyResponse.ok) {
+            const data = await dailyResponse.json();
+            throw new Error(data.message || 'Daily forecast data not found.');
+        }
+
         const currentData = await currentResponse.json();
         const hourlyData = await hourlyResponse.json();
-
-        // Display raw data for both API calls
-        rawDataDisplay.textContent = JSON.stringify(currentData, null, 2);
-        hourlyRawDataDisplay.textContent = JSON.stringify(hourlyData, null, 2);
+        const dailyData = await dailyResponse.json();
 
         // Call functions to display the processed weather data
         displayWeather(currentData);
         displayHourlyWeather(hourlyData);
+        displayDailyWeather(dailyData);
 
     } catch (error) {
         showError(error.message);
@@ -100,9 +105,7 @@ function displayWeather(data) {
 }
 
 function displayHourlyWeather(data) {
-    hourlyForecastContainer.innerHTML = ''; // Clear previous content
-
-    // We'll display the next 24 hours for simplicity
+    hourlyForecastContainer.innerHTML = '';
     const hourlyForecasts = data.list.slice(0, 24);
 
     hourlyForecasts.forEach(hour => {
@@ -124,10 +127,33 @@ function displayHourlyWeather(data) {
     });
 }
 
+function displayDailyWeather(data) {
+    dailyForecastContainer.innerHTML = '';
+
+    data.list.forEach(day => {
+        const date = new Date(day.dt * 1000);
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+        const highTemp = Math.round(day.temp.max);
+        const lowTemp = Math.round(day.temp.min);
+        const iconSrc = `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
+        const description = day.weather[0].description;
+
+        const dailyItem = document.createElement('div');
+        dailyItem.classList.add('daily-item');
+        dailyItem.innerHTML = `
+            <p class="day-name">${dayName}</p>
+            <img src="${iconSrc}" alt="${description}">
+            <p class="temp-range">${highTemp}°F / ${lowTemp}°F</p>
+        `;
+
+        dailyForecastContainer.appendChild(dailyItem);
+    });
+}
+
 function showError(message) {
     weatherDisplay.classList.add('hidden');
-    hourlyForecastContainer.innerHTML = ''; // Clear hourly forecast on error
-    rawDataDisplay.textContent = ''; // Clear raw data on error
-    hourlyRawDataDisplay.textContent = ''; // Clear hourly raw data on error
+    hourlyForecastContainer.innerHTML = '';
+    dailyForecastContainer.innerHTML = '';
     errorMessage.textContent = `Error: ${message}`;
 }
+    
