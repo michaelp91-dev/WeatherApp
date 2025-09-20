@@ -1,4 +1,4 @@
-body {
+    body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #f0f8ff;
     display: flex;
@@ -114,6 +114,7 @@ h3 {
     display: none;
 }
 
+/* Hourly Forecast Styles */
 .hourly-container {
     width: 100%;
     margin-top: 20px;
@@ -123,15 +124,16 @@ h3 {
     display: flex;
     overflow-x: auto;
     white-space: nowrap;
-    padding-bottom: 10px; /* Add some space for scrollbar */
+    padding-bottom: 10px;
 }
 
 .hourly-item {
     display: inline-block;
     text-align: center;
     padding: 10px;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 1px solid #eee;
     flex-shrink: 0;
+    color: #333;
 }
 
 .hourly-item:last-child {
@@ -143,21 +145,33 @@ h3 {
     height: 50px;
 }
 
-.raw-data-container {
+/* NEW: Daily Forecast Styles */
+.daily-container {
+    width: 100%;
     margin-top: 20px;
-    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#daily-forecast-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.daily-item {
+    background-color: #f9f9f9;
     padding: 15px;
-    border-radius: 10px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    border-radius: 8px;
+    text-align: center;
+    color: #333;
 }
 
-.raw-data-container h3 {
-    margin-top: 0;
+.daily-item .day-name {
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
-.raw-data-container pre {
-    color: #fff;
-    font-size: 14px;
-    overflow-x: auto;
+.daily-item .temp-range {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 5px;
 }
