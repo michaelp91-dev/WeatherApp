@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // IMPORTANT: Check for Leaflet library
-    console.log('Is Leaflet loaded?', typeof L !== 'undefined');
-
     const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
     const currentApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
     const hourlyApiUrl = 'https://pro.openweathermap.org/data/2.5/forecast/hourly';
@@ -29,9 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // References for hourly and daily forecast
     const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
     const dailyForecastContainer = document.getElementById('daily-forecast-container');
-
-    // The map is no longer a global variable
-    let map = null;
 
     getWeatherBtn.addEventListener('click', () => {
         if (navigator.geolocation) {
@@ -86,52 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
             displayHourlyWeather(hourlyData);
             displayDailyWeather(dailyData);
 
-            // Initialize and display the map
-            initializeMap(lat, lon);
-
         } catch (error) {
             showError(error.message);
         }
-    }
-
-    function initializeMap(lat, lon) {
-        // If a map already exists, remove it
-        if (map) {
-            map.remove();
-        }
-        
-        // Create the new map centered on the user's location
-        map = L.map('map').setView([lat, lon], 10);
-
-        // Add a base map tile layer (OpenStreetMap)
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        // Add OpenWeatherMap overlays
-        const cloudsLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CLOUDS_NEW/{z}/{x}/{y}?appid=${apiKey}`, {
-            opacity: 0.5,
-            attribution: '© OpenWeatherMap'
-        });
-
-        const temperatureLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/temp_new/{z}/{x}/{y}?appid=${apiKey}`, {
-            opacity: 0.5,
-            attribution: '© OpenWeatherMap'
-        });
-        
-        // Add layers to the map and create a layer control
-        const baseLayers = {
-            "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
-        };
-        
-        const overlayLayers = {
-            "Temperature": temperatureLayer,
-            "Clouds": cloudsLayer
-        };
-        
-        L.control.layers(baseLayers, overlayLayers).addTo(map);
-        temperatureLayer.addTo(map);
     }
 
     function displayWeather(data) {
@@ -209,4 +160,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-                
+            
