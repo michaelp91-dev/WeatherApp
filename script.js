@@ -99,12 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        const cloudsLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CLOUDS_NEW/{z}/{x}/{y}?appid=${apiKey}`, {
+        // Updated API calls to use the 'TA2' layer
+        const cloudsLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CL/{z}/{x}/{y}?appid=${apiKey}`, {
             opacity: 0.5,
             attribution: '© OpenWeatherMap'
         });
 
-        const temperatureLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/temp_new/{z}/{x}/{y}?appid=${apiKey}`, {
+        const temperatureLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?appid=${apiKey}`, {
             opacity: 0.5,
             attribution: '© OpenWeatherMap'
         });
@@ -197,4 +198,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-            
