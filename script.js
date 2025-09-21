@@ -27,8 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
     const dailyForecastContainer = document.getElementById('daily-forecast-container');
 
-    let map = null;
-
     getWeatherBtn.addEventListener('click', () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -77,76 +75,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const hourlyData = await hourlyResponse.json();
             const dailyData = await dailyResponse.json();
 
-            displayWeather(currentData);
-            displayHourlyWeather(hourlyData);
-            displayDailyWeather(dailyData);
-            initializeMap(lat, lon);
+            // All display logic is now in one function
+            updateAllWeatherDisplays(currentData, hourlyData, dailyData);
 
         } catch (error) {
             showError(error.message);
         }
     }
 
-    function initializeMap(lat, lon) {
-        if (map) {
-            map.remove();
-        }
-        
-        map = L.map('map').setView([lat, lon], 10);
-
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        // Updated API calls to use the 'TA2' layer
-        const cloudsLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CL/{z}/{x}/{y}?appid=${apiKey}`, {
-            opacity: 0.5,
-            attribution: '© OpenWeatherMap'
-        });
-
-        const temperatureLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?appid=${apiKey}`, {
-            opacity: 0.5,
-            attribution: '© OpenWeatherMap'
-        });
-        
-        const baseLayers = {
-            "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
-        };
-        
-        const overlayLayers = {
-            "Temperature": temperatureLayer,
-            "Clouds": cloudsLayer
-        };
-        
-        L.control.layers(baseLayers, overlayLayers).addTo(map);
-        temperatureLayer.addTo(map);
-    }
-
-    function displayWeather(data) {
+    function updateAllWeatherDisplays(currentData, hourlyData, dailyData) {
         errorMessage.textContent = '';
-        
-        locationElement.textContent = data.name;
-        temperatureElement.textContent = `${Math.round(data.main.temp)}°F`;
-        descriptionElement.textContent = data.weather[0].description;
-        weatherIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-        
-        feelsLike.textContent = `${Math.round(data.main.feels_like)}°F`;
-        highLow.textContent = `${Math.round(data.main.temp_max)}°F / ${Math.round(data.main.temp_min)}°F`;
-        humidity.textContent = `${data.main.humidity}%`;
-        wind.textContent = `${Math.round(data.wind.speed)} mph`;
-        pressure.textContent = `${data.main.pressure} hPa`;
-        visibility.textContent = `${(data.visibility / 1609).toFixed(1)} mi`;
-        
-        sunrise.textContent = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        sunset.textContent = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
         weatherDisplay.classList.remove('hidden');
-    }
 
-    function displayHourlyWeather(data) {
+        // Update current weather display
+        locationElement.textContent = currentData.name;
+        temperatureElement.textContent = `${Math.round(currentData.main.temp)}°F`;
+        descriptionElement.textContent = currentData.weather[0].description;
+        weatherIcon.src = `https://openweathermap.org/img/wn/${currentData.weather[0].icon}@2x.png`;
+        
+        feelsLike.textContent = `${Math.round(currentData.main.feels_like)}°F`;
+        // High/Low from today's daily forecast
+        highLow.textContent = `${Math.round(dailyData.list[0].temp.max)}°F / ${Math.round(dailyData.list[0].temp.min)}°F`;
+        humidity.textContent = `${currentData.main.humidity}%`;
+        wind.textContent = `${Math.round(currentData.wind.speed)} mph`;
+        pressure.textContent = `${currentData.main.pressure} hPa`;
+        visibility.textContent = `${(currentData.visibility / 1609).toFixed(1)} mi`;
+        
+        sunrise.textContent = new Date(currentData.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        sunset.textContent = new Date(currentData.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Update hourly forecast display
         hourlyForecastContainer.innerHTML = '';
-        const hourlyForecasts = data.list.slice(0, 24);
+        const hourlyForecasts = hourlyData.list.slice(0, 24);
 
         hourlyForecasts.forEach(hour => {
             const date = new Date(hour.dt * 1000);
@@ -165,12 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             hourlyForecastContainer.appendChild(hourlyItem);
         });
-    }
 
-    function displayDailyWeather(data) {
+        // Update daily forecast display
         dailyForecastContainer.innerHTML = '';
 
-        data.list.forEach(day => {
+        dailyData.list.forEach(day => {
             const date = new Date(day.dt * 1000);
             const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
             const highTemp = Math.round(day.temp.max);
@@ -198,3 +157,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+                    
