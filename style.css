@@ -175,16 +175,3 @@ h3 {
     font-weight: bold;
     margin-top: 5px;
 }
-
-/* NEW: Map Styles */
-.map-container {
-    width: 100%;
-    margin-top: 20px;
-}
-
-#map {
-    height: 300px; /* Set a specific height */
-    width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
