@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const hourlyData = await hourlyResponse.json();
             const dailyData = await dailyResponse.json();
 
-            // All display logic is now in one function
             updateAllWeatherDisplays(currentData, hourlyData, dailyData);
 
         } catch (error) {
@@ -94,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
         weatherIcon.src = `https://openweathermap.org/img/wn/${currentData.weather[0].icon}@2x.png`;
         
         feelsLike.textContent = `${Math.round(currentData.main.feels_like)}°F`;
-        // High/Low from today's daily forecast
         highLow.textContent = `${Math.round(dailyData.list[0].temp.max)}°F / ${Math.round(dailyData.list[0].temp.min)}°F`;
         humidity.textContent = `${currentData.main.humidity}%`;
         wind.textContent = `${Math.round(currentData.wind.speed)} mph`;
@@ -132,6 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
         dailyData.list.forEach(day => {
             const date = new Date(day.dt * 1000);
             const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+            // Get the full date in a format like "Sun, Sep 21"
+            const fullDate = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
             const highTemp = Math.round(day.temp.max);
             const lowTemp = Math.round(day.temp.min);
             const iconSrc = `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dailyItem = document.createElement('div');
             dailyItem.classList.add('daily-item');
             dailyItem.innerHTML = `
-                <p class="day-name">${dayName}</p>
+                <p class="day-name">${fullDate}</p>
                 <img src="${iconSrc}" alt="${description}">
                 <p class="temp-range">${highTemp}°F / ${lowTemp}°F</p>
             `;
@@ -157,4 +157,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-                    
