@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // IMPORTANT: Check for Leaflet library
+    console.log('Is Leaflet loaded?', typeof L !== 'undefined');
+
     const apiKey = 'c6bd4e2b18028570cfa5265a70eda238';
     const currentApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
     const hourlyApiUrl = 'https://pro.openweathermap.org/data/2.5/forecast/hourly';
@@ -27,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
     const dailyForecastContainer = document.getElementById('daily-forecast-container');
 
-    // NEW: Global variable for the map
+    // The map is no longer a global variable
     let map = null;
 
     getWeatherBtn.addEventListener('click', () => {
@@ -83,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayHourlyWeather(hourlyData);
             displayDailyWeather(dailyData);
 
-            // NEW: Initialize and display the map
+            // Initialize and display the map
             initializeMap(lat, lon);
 
         } catch (error) {
@@ -91,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // NEW: Function to initialize and display the map
     function initializeMap(lat, lon) {
         // If a map already exists, remove it
         if (map) {
@@ -206,4 +208,5 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.textContent = `Error: ${message}`;
     }
 
-}); // End of the DOMContentLoaded event listener
+});
+                
