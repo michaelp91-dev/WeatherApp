@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
     const dailyForecastContainer = document.getElementById('daily-forecast-container');
 
+    let map = null;
+
     getWeatherBtn.addEventListener('click', () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -75,14 +77,49 @@ document.addEventListener('DOMContentLoaded', () => {
             const hourlyData = await hourlyResponse.json();
             const dailyData = await dailyResponse.json();
 
-            // Call functions to display the processed weather data
             displayWeather(currentData);
             displayHourlyWeather(hourlyData);
             displayDailyWeather(dailyData);
+            initializeMap(lat, lon);
 
         } catch (error) {
             showError(error.message);
         }
+    }
+
+    function initializeMap(lat, lon) {
+        if (map) {
+            map.remove();
+        }
+        
+        map = L.map('map').setView([lat, lon], 10);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        const cloudsLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/CLOUDS_NEW/{z}/{x}/{y}?appid=${apiKey}`, {
+            opacity: 0.5,
+            attribution: '© OpenWeatherMap'
+        });
+
+        const temperatureLayer = L.tileLayer(`https://maps.openweathermap.org/maps/2.0/weather/temp_new/{z}/{x}/{y}?appid=${apiKey}`, {
+            opacity: 0.5,
+            attribution: '© OpenWeatherMap'
+        });
+        
+        const baseLayers = {
+            "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
+        };
+        
+        const overlayLayers = {
+            "Temperature": temperatureLayer,
+            "Clouds": cloudsLayer
+        };
+        
+        L.control.layers(baseLayers, overlayLayers).addTo(map);
+        temperatureLayer.addTo(map);
     }
 
     function displayWeather(data) {
