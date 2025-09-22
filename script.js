@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
     const dailyForecastContainer = document.getElementById('daily-forecast-container');
 
-    // NEW: Reference for the daily detail display
+    // Reference for the daily detail display
     const dailyDetailDisplay = document.getElementById('daily-detail-display');
 
     getWeatherBtn.addEventListener('click', () => {
@@ -146,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="temp-range">${highTemp}°F / ${lowTemp}°F</p>
             `;
 
-            // NEW: Add a click event listener to each daily item
             dailyItem.addEventListener('click', () => {
                 displayDailyDetails(day);
             });
@@ -157,20 +156,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // NEW: Function to display detailed information for a selected day
     function displayDailyDetails(dayData) {
-        // Hide if already visible and the same day is clicked
         if (!dailyDetailDisplay.classList.contains('hidden') && dailyDetailDisplay.dataset.dt === dayData.dt) {
             dailyDetailDisplay.classList.add('hidden');
             delete dailyDetailDisplay.dataset.dt;
             return;
         }
 
-        // Store the day's dt for the click check
         dailyDetailDisplay.dataset.dt = dayData.dt;
 
         const date = new Date(dayData.dt * 1000);
         const fullDate = date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         const sunriseTime = new Date(dayData.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const sunsetTime = new Date(dayData.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        const rainAmount = dayData.rain ? (dayData.rain / 25.4).toFixed(2) : '0';
 
         dailyDetailDisplay.innerHTML = `
             <h4>${fullDate}</h4>
@@ -198,6 +197,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="detail-item">
                     <span class="label">Wind Speed</span>
                     <span class="value">${Math.round(dayData.speed)} mph</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Gust Speed</span>
+                    <span class="value">${Math.round(dayData.gust)} mph</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Cloudiness</span>
+                    <span class="value">${dayData.clouds}%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Precipitation Chance</span>
+                    <span class="value">${Math.round(dayData.pop * 100)}%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Rainfall</span>
+                    <span class="value">${rainAmount} in</span>
                 </div>
                 <div class="detail-item">
                     <span class="label">Pressure</span>
