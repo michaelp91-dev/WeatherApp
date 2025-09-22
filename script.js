@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
     const dailyForecastContainer = document.getElementById('daily-forecast-container');
 
+    // NEW: Reference for the daily detail display
+    const dailyDetailDisplay = document.getElementById('daily-detail-display');
+
     getWeatherBtn.addEventListener('click', () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -124,13 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
             hourlyForecastContainer.appendChild(hourlyItem);
         });
 
-        // Update daily forecast display
+        // Update daily forecast display & add click listener
         dailyForecastContainer.innerHTML = '';
 
-        dailyData.list.forEach(day => {
+        dailyData.list.forEach((day, index) => {
             const date = new Date(day.dt * 1000);
-            const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
-            // Get the full date in a format like "Sun, Sep 21"
             const fullDate = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
             const highTemp = Math.round(day.temp.max);
             const lowTemp = Math.round(day.temp.min);
@@ -145,14 +146,81 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="temp-range">${highTemp}°F / ${lowTemp}°F</p>
             `;
 
+            // NEW: Add a click event listener to each daily item
+            dailyItem.addEventListener('click', () => {
+                displayDailyDetails(day);
+            });
+
             dailyForecastContainer.appendChild(dailyItem);
         });
+    }
+
+    // NEW: Function to display detailed information for a selected day
+    function displayDailyDetails(dayData) {
+        // Hide if already visible and the same day is clicked
+        if (!dailyDetailDisplay.classList.contains('hidden') && dailyDetailDisplay.dataset.dt === dayData.dt) {
+            dailyDetailDisplay.classList.add('hidden');
+            delete dailyDetailDisplay.dataset.dt;
+            return;
+        }
+
+        // Store the day's dt for the click check
+        dailyDetailDisplay.dataset.dt = dayData.dt;
+
+        const date = new Date(dayData.dt * 1000);
+        const fullDate = date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const sunriseTime = new Date(dayData.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const sunsetTime = new Date(dayData.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        dailyDetailDisplay.innerHTML = `
+            <h4>${fullDate}</h4>
+            <div class="daily-detail-grid">
+                <div class="detail-item">
+                    <span class="label">Weather</span>
+                    <span class="value">${dayData.weather[0].description}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Day Temp</span>
+                    <span class="value">${Math.round(dayData.temp.day)}°F</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Night Temp</span>
+                    <span class="value">${Math.round(dayData.temp.night)}°F</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Feels Like</span>
+                    <span class="value">${Math.round(dayData.feels_like.day)}°F</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Humidity</span>
+                    <span class="value">${dayData.humidity}%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Wind Speed</span>
+                    <span class="value">${Math.round(dayData.speed)} mph</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Pressure</span>
+                    <span class="value">${dayData.pressure} hPa</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Sunrise</span>
+                    <span class="value">${sunriseTime}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Sunset</span>
+                    <span class="value">${sunsetTime}</span>
+                </div>
+            </div>
+        `;
+        dailyDetailDisplay.classList.remove('hidden');
     }
 
     function showError(message) {
         weatherDisplay.classList.add('hidden');
         hourlyForecastContainer.innerHTML = '';
         dailyForecastContainer.innerHTML = '';
+        dailyDetailDisplay.classList.add('hidden');
         errorMessage.textContent = `Error: ${message}`;
     }
 
