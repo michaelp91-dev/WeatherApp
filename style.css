@@ -152,7 +152,6 @@ h3 {
 }
 
 #daily-forecast-container {
-    /* Updated for horizontal scroll */
     display: flex;
     overflow-x: auto;
     white-space: nowrap;
@@ -160,7 +159,6 @@ h3 {
 }
 
 .daily-item {
-    /* Updated for horizontal scroll */
     background-color: #f9f9f9;
     padding: 15px;
     border-radius: 8px;
@@ -168,6 +166,7 @@ h3 {
     color: #333;
     flex-shrink: 0;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .daily-item:last-child {
@@ -183,4 +182,30 @@ h3 {
     font-size: 1.1em;
     font-weight: bold;
     margin-top: 5px;
+}
+
+/* NEW: Daily Detail Display */
+#daily-detail-display {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.daily-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    text-align: left;
+}
+
+.daily-detail-grid h4 {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
+    font-size: 1.2em;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
 }
